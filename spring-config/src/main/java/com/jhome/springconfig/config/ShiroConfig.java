@@ -3,6 +3,7 @@ package com.jhome.springconfig.config;
 import com.jhome.springconfig.shiro.cache.CustomRedisCacheManager;
 import com.jhome.springconfig.shiro.dao.CustomSessionDao;
 import com.jhome.springconfig.shiro.filter.MyFormAuthenticationFilter;
+import com.jhome.springconfig.shiro.filter.MyLogoutFilter;
 import com.jhome.springconfig.shiro.filter.SsoFilter;
 import com.jhome.springconfig.shiro.manager.RedisWebSessionManager;
 import com.jhome.springconfig.shiro.spring.DemoRealm;
@@ -34,8 +35,11 @@ public class ShiroConfig {
     @Value("${sso.system:false}")
     private boolean ssoSystem;
 
-    @Value("${sso.loginIp}")
-    private String ssoLoginIp;
+    @Value("${sso.loginUrl}")
+    private String ssoLoginUrl;
+
+    @Value("${sso.logoutUrl}")
+    private String ssoLogoutUrl;
 
     @Bean(name="customRedisCacheManager")
     public CustomRedisCacheManager customRedisCacheManager() {
@@ -87,15 +91,17 @@ public class ShiroConfig {
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
 //        filters.put("anyRoles", myAuthorizationFilter());
         filters.put("authc", myFormAuthenticationFilter());
+        filters.put("logout", myLogoutFilter());
         if(!ssoSystem) {
             //自定义filter直接采用在这个bean方法里new出来，该map的key可以自定义，然后对下面的filterChain相关的链接做过滤
-            filters.put("ssoFilter", new SsoFilter(ssoLoginIp));
+            filters.put("ssoFilter", new SsoFilter(ssoLoginUrl));
         }
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/login");
         shiroFilterFactoryBean.setSuccessUrl("/login");
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        filterChainDefinitionMap.put("/logout", "logout");
         filterChainDefinitionMap.put("/test/aaa", "anon");
         if(!ssoSystem) {
             filterChainDefinitionMap.put("/login", "authc, ssoFilter");
@@ -119,6 +125,13 @@ public class ShiroConfig {
         MyFormAuthenticationFilter myFormAuthenticationFilter = new MyFormAuthenticationFilter();
         myFormAuthenticationFilter.setSsoSystem(ssoSystem);
         return myFormAuthenticationFilter;
+    }
+
+    public MyLogoutFilter myLogoutFilter() {
+        MyLogoutFilter myLogoutFilter = new MyLogoutFilter();
+        myLogoutFilter.setSsoSystem(ssoSystem);
+        myLogoutFilter.setSsoLogoutUrl(ssoLogoutUrl);
+        return myLogoutFilter;
     }
 
     @Bean(name="sessionIdGenerator")

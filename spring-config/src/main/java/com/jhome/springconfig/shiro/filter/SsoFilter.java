@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SsoFilter extends AccessControlFilter {
 
-    private String ssoLoginIp;
+    private String ssoLoginUrl;
 
-    public SsoFilter(String ssoLoginIp) {
-        this.ssoLoginIp = ssoLoginIp;
+    public SsoFilter(String ssoLoginUrl) {
+        this.ssoLoginUrl = ssoLoginUrl;
     }
 
     @Override
@@ -31,9 +31,13 @@ public class SsoFilter extends AccessControlFilter {
         if(!subject.isAuthenticated() && !subject.isRemembered()) {
             //如果没有登录，重定向到单点登录系统
             HttpServletRequest req = (HttpServletRequest) request;
-            String reqUrl = req.getScheme() + "://"+ ssoLoginIp +":" + req.getServerPort() + req.getContextPath() + WebUtils.getSavedRequest(request).getRequestURI();
+            String serverip = req.getLocalName();
+            if("0:0:0:0:0:0:0:1".equals(serverip)) {
+                serverip = "127.0.0.1";
+            }
+            String reqUrl = req.getScheme() + "://"+serverip+":" + req.getServerPort() + req.getContextPath() + WebUtils.getSavedRequest(request).getRequestURI();
             HttpServletResponse res = (HttpServletResponse) response;
-            res.sendRedirect(ssoLoginIp + "?redirectUrl="+reqUrl);
+            res.sendRedirect(ssoLoginUrl + "?redirectUrl="+reqUrl);
             return false;
         }
         return true;

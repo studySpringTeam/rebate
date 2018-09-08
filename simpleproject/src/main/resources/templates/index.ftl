@@ -6,7 +6,7 @@
     <title>index</title>
 </head>
 <body>
-欢迎来到springboot, ${userName}<br/>
-<a href="${ctx}/logout">退出</a>
+    欢迎来到springboot-simpleproject项目，${userName}
+    <a href="${ctx}/logout">退出</a>
 </body>
 </html>

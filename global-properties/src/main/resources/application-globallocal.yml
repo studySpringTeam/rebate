@@ -6,7 +6,8 @@ spring:
     port: 6379
 
 sso:
-  loginIp: 127.0.0.1
+  loginUrl: http://127.0.0.1:3000/login
+  logoutUrl: http://127.0.0.1:3000/logout
 
 context:
   commonstatic:

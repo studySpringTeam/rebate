@@ -11,21 +11,6 @@
 </head>
 
 <body>
-<@shiro.authenticated>
-    <script>
-        debugger;
-        var redirectUrl = $("#redirectUrl").val();
-        if(redirectUrl != null && redirectUrl != '') {
-            window.location.href = redirectUrl;
-        } else {
-            var ctx = $("#ctxLogin").val();
-            if(typeof(ctx) == 'undefined') {
-                ctx = '';
-            }
-            window.location.href =  ctx + "/test/index";
-        }
-    </script>
-</@shiro.authenticated>
 <input type="hidden" id="ctxLogin" value="${ctx}" />
 <form action="${ctx}/login" method="post">
     用户名：<input type="text" name="username" />
@@ -34,4 +19,19 @@
     <input type="submit" value="登录">
 </form>
 </body>
+<@shiro.authenticated>
+<script>
+    debugger;
+    var redirectUrl = $("#redirectUrl").val();
+    if(redirectUrl != null && redirectUrl != '') {
+        window.location.href = redirectUrl;
+    } else {
+        var ctx = $("#ctxLogin").val();
+        if(typeof(ctx) == 'undefined') {
+            ctx = '';
+        }
+        window.location.href =  ctx + "/test/index";
+    }
+</script>
+</@shiro.authenticated>
 </html>

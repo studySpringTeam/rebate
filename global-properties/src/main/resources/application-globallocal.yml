@@ -1,0 +1,13 @@
+spring:
+  redis:
+    host: localhost
+    password:
+    database: 0
+    port: 6379
+
+sso:
+  loginIp: 127.0.0.1
+
+context:
+  commonstatic:
+  projectstatic:

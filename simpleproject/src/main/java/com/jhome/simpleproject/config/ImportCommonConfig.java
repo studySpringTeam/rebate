@@ -3,7 +3,9 @@ package com.jhome.simpleproject.config;
 import com.jhome.springconfig.config.FreeMarkerConfig;
 import com.jhome.springconfig.config.ShiroConfig;
 import com.jhome.springconfig.config.SpringMvcConfig;
+import com.jhome.utils.shiro.spring.CommonRealm;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
@@ -21,4 +23,9 @@ import org.springframework.context.annotation.Configuration;
         @ComponentScan(basePackages = {"com.jhome.simpleproject.web"})
 })
 public class ImportCommonConfig {
+
+    @Bean
+    public CommonRealm commonRealm() {
+        return new CommonRealm();
+    }
 }

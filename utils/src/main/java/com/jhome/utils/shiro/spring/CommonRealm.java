@@ -1,7 +1,7 @@
-package com.jhome.springconfig.shiro.spring;
+package com.jhome.utils.shiro.spring;
 
-import com.jhome.springconfig.shiro.exception.PasswordEmptyException;
-import com.jhome.springconfig.shiro.exception.UsernameEmptyException;
+import com.jhome.utils.shiro.exception.PasswordEmptyException;
+import com.jhome.utils.shiro.exception.UsernameEmptyException;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -13,9 +13,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Created by wangmin on 2018/9/8.
+ * Created by wangmin on 2018/9/9.
  */
-public class DemoRealm extends AuthorizingRealm {
+public class CommonRealm extends AuthorizingRealm {
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
@@ -39,7 +40,7 @@ public class DemoRealm extends AuthorizingRealm {
         }
         //假定用户名和密码就是system和123456
         String password = new Md5Hash("123456", username, 2).toString();
-        return new SimpleAuthenticationInfo(new ShiroUser(username,"系统"), password, getName());
+        return new SimpleAuthenticationInfo(username, password, getName());
     }
 
     /**

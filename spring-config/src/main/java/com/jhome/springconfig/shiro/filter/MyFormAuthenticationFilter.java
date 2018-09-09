@@ -1,6 +1,6 @@
 package com.jhome.springconfig.shiro.filter;
 
-import com.jhome.springconfig.shiro.spring.DemoRealm;
+import com.jhome.utils.shiro.spring.CommonRealm;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -66,7 +66,7 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request,
                                      ServletResponse response) throws Exception {
         Subject currentUser = SecurityUtils.getSubject();
-        DemoRealm.ShiroUser shiroUser = (DemoRealm.ShiroUser) subject.getPrincipal();
+        CommonRealm.ShiroUser shiroUser = (CommonRealm.ShiroUser) subject.getPrincipal();
         Session session = currentUser.getSession();
         session.setAttribute("userCode", shiroUser.getLoggerinName());
         session.setAttribute("userName", shiroUser.getName());

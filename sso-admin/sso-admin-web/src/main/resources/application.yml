@@ -3,8 +3,14 @@ server:
 
 spring:
   profiles:
-    active: globallocal,local
+    active: globaldev,globallocal,local
 #    active: globaltest,test
+  datasource:
+      url: jdbc:mysql://127.0.0.1:3306/adminlogin?useUnicode=true&characterEncoding=utf-8
+      username: root
+      password: wangmin
+      driver-class-name: com.mysql.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
 
 sso:
   system: true

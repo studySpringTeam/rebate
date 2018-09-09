@@ -6,7 +6,7 @@ import com.jhome.springconfig.shiro.filter.MyFormAuthenticationFilter;
 import com.jhome.springconfig.shiro.filter.MyLogoutFilter;
 import com.jhome.springconfig.shiro.filter.SsoFilter;
 import com.jhome.springconfig.shiro.manager.RedisWebSessionManager;
-import com.jhome.springconfig.shiro.spring.DemoRealm;
+import com.jhome.utils.shiro.spring.CommonRealm;
 import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -15,6 +15,7 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,9 @@ public class ShiroConfig {
 
     @Value("${sso.logoutUrl}")
     private String ssoLogoutUrl;
+
+    @Autowired
+    private CommonRealm commonRealm;
 
     @Bean(name="customRedisCacheManager")
     public CustomRedisCacheManager customRedisCacheManager() {
@@ -72,14 +76,6 @@ public class ShiroConfig {
         DefaultAdvisorAutoProxyCreator daap = new DefaultAdvisorAutoProxyCreator();
         daap.setProxyTargetClass(true);
         return daap;
-    }
-
-    @Bean
-    public DemoRealm demoRealm() {
-        DemoRealm demoRealm = new DemoRealm();
-//        demoRealm.setAuthenticationCachingEnabled(true);
-//        demoRealm.setAuthorizationCachingEnabled(true);
-        return demoRealm;
     }
 
     /**
@@ -167,11 +163,10 @@ public class ShiroConfig {
     }
 
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(DemoRealm demoRealm,
-                                                                  RedisWebSessionManager redisWebSessionManager,
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(RedisWebSessionManager redisWebSessionManager,
                                                                   CustomRedisCacheManager customRedisCacheManager) {
         DefaultWebSecurityManager dwsm = new DefaultWebSecurityManager();
-        dwsm.setRealm(demoRealm);
+        dwsm.setRealm(commonRealm);
         dwsm.setCacheManager(customRedisCacheManager);// 换成Redis的缓存管理器
         dwsm.setSessionManager(redisWebSessionManager);
 //        dwsm.setCacheManager(getEhCacheManager());

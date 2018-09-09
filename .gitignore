@@ -13,5 +13,5 @@ bin
 /target/
 git.properties
 .idea
-/*.iml
+*.iml
 .factorypath
